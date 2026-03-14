@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Herramientas Online</title>
+
+<style>
+
+body{
+font-family:Arial;
+margin:0;
+background:#0f172a;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:100vh;
+transition:0.3s;
+}
+
+.container{
+background:#1e293b;
+padding:25px;
+border-radius:15px;
+width:380px;
+box-shadow:0 0 20px rgba(0,0,0,0.4);
+transition:0.3s;
+}
+
+h2{
+margin-top:0;
+text-align:center;
+}
+
+button{
+padding:10px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+margin:5px;
+background:#ef4444;
+color:white;
+font-weight:bold;
+}
+
+button:hover{
+opacity:0.85;
+}
+
+.mode-btn{
+width:100%;
+background:#3b82f6;
+}
+
+.calc-display{
+width:100%;
+height:50px;
+font-size:20px;
+margin-bottom:10px;
+border-radius:8px;
+border:none;
+padding:10px;
+}
+
+.calc-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:8px;
+}
+
+.calc-grid button{
+padding:15px;
+font-size:16px;
+background:#334155;
+}
+
+.password{
+display:none;
+}
+
+#password{
+background:#020617;
+padding:12px;
+border-radius:8px;
+margin:10px 0;
+word-break:break-all;
+}
+
+.options{
+font-size:14px;
+}
+
+.history{
+margin-top:10px;
+max-height:80px;
+overflow:auto;
+font-size:12px;
+background:#020617;
+padding:8px;
+border-radius:8px;
+}
+
+.strength{
+height:8px;
+background:#111;
+border-radius:4px;
+margin-top:8px;
+overflow:hidden;
+}
+
+.strength-bar{
+height:100%;
+width:0%;
+background:red;
+transition:0.3s;
+}
+
+input[type="range"]{
+width:100%;
+}
+
+.switch-btn{
+margin-top:15px;
+width:100%;
+background:#22c55e;
+}
+
+
+/* MODO CLARO */
+
+.light{
+background:#f1f5f9;
+color:black;
+}
+
+.light .container{
+background:white;
+}
+
+.light #password{
+background:#e2e8f0;
+}
+
+.light .history{
+background:#e2e8f0;
+}
+
+.light .calc-grid button{
+background:#d1d5db;
+color:black;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<button class="mode-btn" onclick="toggleMode()">Modo claro / oscuro</button>
+
+<div id="calculatorTool">
+
+<h2>Calculadora</h2>
+
+<input class="calc-display" id="calcDisplay" disabled>
+
+<div class="calc-grid">
+
+<button onclick="press('7')">7</button>
+<button onclick="press('8')">8</button>
+<button onclick="press('9')">9</button>
+<button onclick="press('/')">÷</button>
+
+<button onclick="press('4')">4</button>
+<button onclick="press('5')">5</button>
+<button onclick="press('6')">6</button>
+<button onclick="press('*')">×</button>
+
+<button onclick="press('1')">1</button>
+<button onclick="press('2')">2</button>
+<button onclick="press('3')">3</button>
+<button onclick="press('-')">−</button>
+
+<button onclick="press('0')">0</button>
+<button onclick="press('.')">.</button>
+<button onclick="calculate()">=</button>
+<button onclick="press('+')">+</button>
+
+<button onclick="press('%')">%</button>
+<button onclick="press('(')">(</button>
+<button onclick="press(')')">)</button>
+<button onclick="clearCalc()">C</button>
+
+</div>
+
+<button class="switch-btn" onclick="showPassword()">Ir al generador de contraseñas</button>
+
+</div>
+
+
+<div id="passwordTool" class="password">
+
+<h2>Generador de Contraseñas</h2>
+
+<div id="password">Pulsa generar</div>
+
+<button onclick="generatePassword()">Generar</button>
+<button onclick="copyPassword()">Copiar</button>
+
+<div class="options">
+
+<p>Longitud: <span id="lengthValue">16</span></p>
+<input type="range" min="6" max="32" value="16" id="length">
+
+<label><input type="checkbox" id="upper" checked> Mayúsculas</label><br>
+<label><input type="checkbox" id="lower" checked> Minúsculas</label><br>
+<label><input type="checkbox" id="numbers" checked> Números</label><br>
+<label><input type="checkbox" id="symbols"> Símbolos</label>
+
+</div>
+
+<div class="strength">
+<div class="strength-bar" id="strengthBar"></div>
+</div>
+
+<div class="history" id="history"></div>
+
+<button class="switch-btn" onclick="showCalculator()">Volver a calculadora</button>
+
+</div>
+
+</div>
+
+<script>
+
+function toggleMode(){
+document.body.classList.toggle("light");
+}
+
+let display=document.getElementById("calcDisplay");
+
+function press(val){
+display.value+=val;
+}
+
+function calculate(){
+try{
+display.value=eval(display.value);
+}catch{
+display.value="Error";
+}
+}
+
+function clearCalc(){
+display.value="";
+}
+
+function showPassword(){
+document.getElementById("calculatorTool").style.display="none";
+document.getElementById("passwordTool").style.display="block";
+}
+
+function showCalculator(){
+document.getElementById("passwordTool").style.display="none";
+document.getElementById("calculatorTool").style.display="block";
+}
+
+const upper="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const lower="abcdefghijklmnopqrstuvwxyz";
+const numbers="0123456789";
+const symbols="!@#$%^&*()_+[]{}<>?";
+
+const slider=document.getElementById("length");
+const lengthValue=document.getElementById("lengthValue");
+
+slider.oninput=()=>lengthValue.innerText=slider.value;
+
+function generatePassword(){
+
+let chars="";
+
+if(document.getElementById("upper").checked) chars+=upper;
+if(document.getElementById("lower").checked) chars+=lower;
+if(document.getElementById("numbers").checked) chars+=numbers;
+if(document.getElementById("symbols").checked) chars+=symbols;
+
+if(chars===""){
+alert("Selecciona al menos una opción");
+return;
+}
+
+let length=slider.value;
+let password="";
+
+for(let i=0;i<length;i++){
+password+=chars.charAt(Math.floor(Math.random()*chars.length));
+}
+
+document.getElementById("password").innerText=password;
+
+checkStrength(password);
+addHistory(password);
+
+}
+
+function copyPassword(){
+
+let text=document.getElementById("password").innerText;
+
+navigator.clipboard.writeText(text).then(()=>{
+alert("Contraseña copiada");
+});
+
+}
+
+function checkStrength(pass){
+
+let score=0;
+
+if(pass.length>8) score++;
+if(/[A-Z]/.test(pass)) score++;
+if(/[0-9]/.test(pass)) score++;
+if(/[^A-Za-z0-9]/.test(pass)) score++;
+
+let bar=document.getElementById("strengthBar");
+
+bar.style.width=(score/4*100)+"%";
+
+if(score<=1) bar.style.background="red";
+else if(score==2) bar.style.background="orange";
+else if(score==3) bar.style.background="yellow";
+else bar.style.background="green";
+
+}
+
+function addHistory(pass){
+
+let history=document.getElementById("history");
+
+let item=document.createElement("div");
+
+item.innerText=pass;
+
+history.prepend(item);
+
+}
+
+</script>
+
+</body>
+</html>
