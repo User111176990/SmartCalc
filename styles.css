@@ -1,0 +1,157 @@
+:root{
+  --bg:#0f172a;
+  --panel:#1e293b;
+  --surface:#020617;
+  --text:#f8fafc;
+  --muted:#cbd5e1;
+  --primary:#3b82f6;
+  --secondary:#22c55e;
+  --danger:#ef4444;
+}
+
+*{ box-sizing:border-box; }
+
+body{
+  font-family:Arial, sans-serif;
+  margin:0;
+  background:linear-gradient(165deg,#0f172a,#1e293b);
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  transition:0.35s ease;
+}
+
+.container{
+  background:linear-gradient(160deg,rgba(30,41,59,0.95),rgba(15,23,42,0.94));
+  backdrop-filter: blur(8px);
+  padding:24px;
+  border-radius:16px;
+  width:min(440px,92vw);
+  box-shadow:0 20px 40px rgba(0,0,0,0.35);
+  border:1px solid rgba(148,163,184,.25);
+}
+
+h2{ margin:0 0 12px; text-align:center; }
+
+button{
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  margin:4px;
+  background:var(--danger);
+  color:white;
+  font-weight:bold;
+  transition:transform .14s ease, filter .14s ease, box-shadow .2s ease;
+}
+button:hover{ filter:brightness(1.08); box-shadow:0 5px 12px rgba(0,0,0,.2); }
+button:active{ transform:translateY(1px) scale(0.985); }
+button:focus-visible{ outline:2px solid #93c5fd; outline-offset:2px; }
+
+.mode-btn{ width:100%; background:var(--primary); }
+.switch-btn{ margin-top:14px; width:100%; background:var(--secondary); }
+.subtle-btn{ background:#475569; }
+.warning-btn{ background:#f59e0b; }
+
+.tool{
+  animation:fadeSlide .26s ease;
+}
+
+@keyframes fadeSlide{
+  from{ opacity:0; transform:translateY(6px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+
+.calc-display{
+  width:100%;
+  height:52px;
+  font-size:21px;
+  margin-bottom:10px;
+  border-radius:10px;
+  border:1px solid #334155;
+  padding:10px;
+  background:#0b1223;
+  color:var(--text);
+}
+
+.calc-grid,.calc-memory,.calc-scientific{ display:grid; gap:8px; }
+.calc-grid{ grid-template-columns:repeat(4,1fr); }
+.calc-memory{ grid-template-columns:repeat(4,1fr); margin:10px 0; }
+.calc-scientific{ grid-template-columns:repeat(4,1fr); margin-bottom:10px; }
+
+.calc-grid button,.calc-scientific button{ padding:14px; font-size:16px; margin:0; background:#334155; }
+
+.section{
+  margin-top:12px;
+  background:rgba(2,6,23,0.55);
+  border:1px solid #334155;
+  border-radius:10px;
+  padding:10px;
+}
+
+.password{ display:none; }
+
+#password{
+  background:var(--surface);
+  padding:12px;
+  border-radius:8px;
+  margin:10px 0;
+  word-break:break-all;
+  min-height:20px;
+  border:1px solid #334155;
+}
+
+.options{ font-size:14px; color:var(--muted); }
+.history{
+  margin-top:8px;
+  max-height:120px;
+  overflow:auto;
+  font-size:12px;
+  background:var(--surface);
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #334155;
+}
+.history div{ padding:4px 0; border-bottom:1px solid rgba(148,163,184,0.2); }
+.history div:last-child{ border-bottom:none; }
+
+.strength{
+  height:8px;
+  background:#111;
+  border-radius:4px;
+  margin-top:8px;
+  overflow:hidden;
+}
+.strength-bar{ height:100%; width:0%; background:red; transition:0.3s; }
+#strengthText{ margin-top:8px; font-size:13px; font-weight:bold; }
+#passwordTip{ margin-top:2px; font-size:12px; color:var(--muted); }
+#shortcutHint{ font-size:12px; color:var(--muted); margin-top:8px; line-height:1.4; }
+
+input[type="range"]{ width:100%; }
+
+.toast{
+  position:fixed;
+  bottom:16px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:#0b1223;
+  color:#fff;
+  border:1px solid #334155;
+  border-radius:8px;
+  padding:10px 14px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease, transform .2s ease;
+  z-index:1000;
+}
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* MODO CLARO */
+.light{ background:linear-gradient(165deg,#f8fafc,#e2e8f0); color:black; }
+.light .container{ background:linear-gradient(160deg,#ffffff,#f8fafc); color:#0f172a; border-color:#d1d5db; }
+.light .calc-display{ background:#f8fafc; color:#0f172a; border-color:#d1d5db; }
+.light #password, .light .history, .light .section{ background:#e2e8f0; border-color:#cbd5e1; }
+.light .calc-grid button,.light .calc-scientific button{ background:#d1d5db; color:black; }
+.light .subtle-btn{ background:#94a3b8; color:#0f172a; }
