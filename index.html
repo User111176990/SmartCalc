@@ -2,350 +2,723 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Herramientas Online</title>
 
 <style>
+:root{
+  --bg:#0f172a;
+  --panel:#1e293b;
+  --surface:#020617;
+  --text:#f8fafc;
+  --muted:#cbd5e1;
+  --primary:#3b82f6;
+  --secondary:#22c55e;
+  --danger:#ef4444;
+}
+
+*{ box-sizing:border-box; }
 
 body{
-font-family:Arial;
-margin:0;
-background:#0f172a;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-transition:0.3s;
+  font-family:Arial, sans-serif;
+  margin:0;
+  background:linear-gradient(165deg,#0f172a,#1e293b);
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  transition:0.35s ease;
 }
 
 .container{
-background:#1e293b;
-padding:25px;
-border-radius:15px;
-width:380px;
-box-shadow:0 0 20px rgba(0,0,0,0.4);
-transition:0.3s;
+  background:linear-gradient(160deg,rgba(30,41,59,0.95),rgba(15,23,42,0.94));
+  backdrop-filter: blur(8px);
+  padding:24px;
+  border-radius:16px;
+  width:min(440px,92vw);
+  box-shadow:0 20px 40px rgba(0,0,0,0.35);
+  border:1px solid rgba(148,163,184,.25);
 }
 
-h2{
-margin-top:0;
-text-align:center;
-}
+h2{ margin:0 0 12px; text-align:center; }
 
 button{
-padding:10px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-margin:5px;
-background:#ef4444;
-color:white;
-font-weight:bold;
+  padding:10px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  margin:4px;
+  background:var(--danger);
+  color:white;
+  font-weight:bold;
+  transition:transform .14s ease, filter .14s ease, box-shadow .2s ease;
+}
+button:hover{ filter:brightness(1.08); box-shadow:0 5px 12px rgba(0,0,0,.2); }
+button:active{ transform:translateY(1px) scale(0.985); }
+button:focus-visible{ outline:2px solid #93c5fd; outline-offset:2px; }
+
+.mode-btn{ width:100%; background:var(--primary); }
+.switch-btn{ margin-top:14px; width:100%; background:var(--secondary); }
+.subtle-btn{ background:#475569; }
+.warning-btn{ background:#f59e0b; }
+
+.tool{
+  animation:fadeSlide .26s ease;
 }
 
-button:hover{
-opacity:0.85;
-}
-
-.mode-btn{
-width:100%;
-background:#3b82f6;
+@keyframes fadeSlide{
+  from{ opacity:0; transform:translateY(6px); }
+  to{ opacity:1; transform:translateY(0); }
 }
 
 .calc-display{
-width:100%;
-height:50px;
-font-size:20px;
-margin-bottom:10px;
-border-radius:8px;
-border:none;
-padding:10px;
+  width:100%;
+  height:52px;
+  font-size:21px;
+  margin-bottom:10px;
+  border-radius:10px;
+  border:1px solid #334155;
+  padding:10px;
+  background:#0b1223;
+  color:var(--text);
 }
 
-.calc-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:8px;
+.calc-grid,.calc-memory,.calc-scientific{ display:grid; gap:8px; }
+.calc-grid{ grid-template-columns:repeat(4,1fr); }
+.calc-memory{ grid-template-columns:repeat(4,1fr); margin:10px 0; }
+.calc-scientific{ grid-template-columns:repeat(4,1fr); margin-bottom:10px; }
+
+.calc-grid button,.calc-scientific button{ padding:14px; font-size:16px; margin:0; background:#334155; }
+
+.section{
+  margin-top:12px;
+  background:rgba(2,6,23,0.55);
+  border:1px solid #334155;
+  border-radius:10px;
+  padding:10px;
 }
 
-.calc-grid button{
-padding:15px;
-font-size:16px;
-background:#334155;
-}
-
-.password{
-display:none;
-}
+.password{ display:none; }
 
 #password{
-background:#020617;
-padding:12px;
-border-radius:8px;
-margin:10px 0;
-word-break:break-all;
+  background:var(--surface);
+  padding:12px;
+  border-radius:8px;
+  margin:10px 0;
+  word-break:break-all;
+  min-height:20px;
+  border:1px solid #334155;
 }
 
-.options{
-font-size:14px;
-}
-
+.options{ font-size:14px; color:var(--muted); }
 .history{
-margin-top:10px;
-max-height:80px;
-overflow:auto;
-font-size:12px;
-background:#020617;
-padding:8px;
-border-radius:8px;
+  margin-top:8px;
+  max-height:120px;
+  overflow:auto;
+  font-size:12px;
+  background:var(--surface);
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #334155;
 }
+.history div{ padding:4px 0; border-bottom:1px solid rgba(148,163,184,0.2); }
+.history div:last-child{ border-bottom:none; }
 
 .strength{
-height:8px;
-background:#111;
-border-radius:4px;
-margin-top:8px;
-overflow:hidden;
+  height:8px;
+  background:#111;
+  border-radius:4px;
+  margin-top:8px;
+  overflow:hidden;
 }
+.strength-bar{ height:100%; width:0%; background:red; transition:0.3s; }
+#strengthText{ margin-top:8px; font-size:13px; font-weight:bold; }
+#passwordTip{ margin-top:2px; font-size:12px; color:var(--muted); }
+#shortcutHint{ font-size:12px; color:var(--muted); margin-top:8px; line-height:1.4; }
 
-.strength-bar{
-height:100%;
-width:0%;
-background:red;
-transition:0.3s;
+input[type="range"]{ width:100%; }
+
+.toast{
+  position:fixed;
+  bottom:16px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:#0b1223;
+  color:#fff;
+  border:1px solid #334155;
+  border-radius:8px;
+  padding:10px 14px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .2s ease, transform .2s ease;
+  z-index:1000;
 }
-
-input[type="range"]{
-width:100%;
-}
-
-.switch-btn{
-margin-top:15px;
-width:100%;
-background:#22c55e;
-}
-
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(0); }
 
 /* MODO CLARO */
-
-.light{
-background:#f1f5f9;
-color:black;
-}
-
-.light .container{
-background:white;
-}
-
-.light #password{
-background:#e2e8f0;
-}
-
-.light .history{
-background:#e2e8f0;
-}
-
-.light .calc-grid button{
-background:#d1d5db;
-color:black;
-}
-
+.light{ background:linear-gradient(165deg,#f8fafc,#e2e8f0); color:black; }
+.light .container{ background:linear-gradient(160deg,#ffffff,#f8fafc); color:#0f172a; border-color:#d1d5db; }
+.light .calc-display{ background:#f8fafc; color:#0f172a; border-color:#d1d5db; }
+.light #password, .light .history, .light .section{ background:#e2e8f0; border-color:#cbd5e1; }
+.light .calc-grid button,.light .calc-scientific button{ background:#d1d5db; color:black; }
+.light .subtle-btn{ background:#94a3b8; color:#0f172a; }
 </style>
 </head>
 
 <body>
-
 <div class="container">
+  <button class="mode-btn" onclick="toggleMode()">Modo claro / oscuro</button>
 
-<button class="mode-btn" onclick="toggleMode()">Modo claro / oscuro</button>
+  <div id="calculatorTool" class="tool">
+    <h2>Calculadora</h2>
+    <input class="calc-display" id="calcDisplay" disabled aria-label="Pantalla de calculadora">
 
-<div id="calculatorTool">
+    <div class="calc-scientific">
+      <button onclick="applySquareRoot()">√x</button>
+      <button onclick="applyPower2()">x²</button>
+      <button onclick="applyReciprocal()">1/x</button>
+      <button onclick="toggleSign()">±</button>
+    </div>
 
-<h2>Calculadora</h2>
+    <div class="calc-grid">
+      <button onclick="press('7')">7</button>
+      <button onclick="press('8')">8</button>
+      <button onclick="press('9')">9</button>
+      <button onclick="press('/')">÷</button>
 
-<input class="calc-display" id="calcDisplay" disabled>
+      <button onclick="press('4')">4</button>
+      <button onclick="press('5')">5</button>
+      <button onclick="press('6')">6</button>
+      <button onclick="press('*')">×</button>
 
-<div class="calc-grid">
+      <button onclick="press('1')">1</button>
+      <button onclick="press('2')">2</button>
+      <button onclick="press('3')">3</button>
+      <button onclick="press('-')">−</button>
 
-<button onclick="press('7')">7</button>
-<button onclick="press('8')">8</button>
-<button onclick="press('9')">9</button>
-<button onclick="press('/')">÷</button>
+      <button onclick="press('0')">0</button>
+      <button onclick="press('.')">.</button>
+      <button onclick="calculate()">=</button>
+      <button onclick="press('+')">+</button>
 
-<button onclick="press('4')">4</button>
-<button onclick="press('5')">5</button>
-<button onclick="press('6')">6</button>
-<button onclick="press('*')">×</button>
+      <button onclick="press('%')">%</button>
+      <button onclick="press('(')">(</button>
+      <button onclick="press(')')">)</button>
+      <button onclick="clearCalc()">C</button>
+    </div>
 
-<button onclick="press('1')">1</button>
-<button onclick="press('2')">2</button>
-<button onclick="press('3')">3</button>
-<button onclick="press('-')">−</button>
+    <div class="calc-memory">
+      <button class="subtle-btn" onclick="insertConstant('PI')">π</button>
+      <button class="subtle-btn" onclick="insertConstant('E')">e</button>
+      <button class="subtle-btn" onclick="insertLastAnswer()">Ans</button>
+      <button class="subtle-btn" onclick="deleteLast()">DEL</button>
+      <button class="subtle-btn" onclick="memoryAdd()">M+</button>
+      <button class="subtle-btn" onclick="memorySubtract()">M-</button>
+      <button class="subtle-btn" onclick="memoryRecall()">MR</button>
+      <button class="subtle-btn" onclick="memoryClear()">MC</button>
+    </div>
 
-<button onclick="press('0')">0</button>
-<button onclick="press('.')">.</button>
-<button onclick="calculate()">=</button>
-<button onclick="press('+')">+</button>
+    <div class="section">
+      <strong>Memoria:</strong> <span id="memoryValue">0</span> · <strong>Último resultado:</strong> <span id="lastAnswer">0</span>
+    </div>
 
-<button onclick="press('%')">%</button>
-<button onclick="press('(')">(</button>
-<button onclick="press(')')">)</button>
-<button onclick="clearCalc()">C</button>
+    <div class="section">
+      <strong>Historial de operaciones</strong>
+      <button class="warning-btn" style="float:right" onclick="clearCalcHistory()">Limpiar</button>
+      <div style="clear:both"></div>
+      <div class="history" id="calcHistory"></div>
+      <div id="shortcutHint">
+        Atajos: Enter (=), Backspace (DEL), Esc/Ctrl+L (limpiar), s (√), q (x²), i (1/x), n (±), p (π), e (e), a (Ans).
+      </div>
+    </div>
 
+    <button class="switch-btn" onclick="showPassword()">Ir al generador de contraseñas</button>
+  </div>
+
+  <div id="passwordTool" class="password tool">
+    <h2>Generador de Contraseñas</h2>
+    <div id="password">Pulsa generar</div>
+
+    <button onclick="generatePassword()">Generar</button>
+    <button onclick="copyPassword()">Copiar</button>
+
+    <div class="options">
+      <p>Longitud: <span id="lengthValue">16</span></p>
+      <input type="range" min="6" max="64" value="16" id="length">
+
+      <label><input type="checkbox" id="upper" checked> Mayúsculas</label><br>
+      <label><input type="checkbox" id="lower" checked> Minúsculas</label><br>
+      <label><input type="checkbox" id="numbers" checked> Números</label><br>
+      <label><input type="checkbox" id="symbols"> Símbolos</label><br>
+      <label><input type="checkbox" id="excludeSimilar"> Excluir caracteres ambiguos (O,0,l,1,I)</label>
+    </div>
+
+    <div class="strength"><div class="strength-bar" id="strengthBar"></div></div>
+    <div id="strengthText">Fortaleza: -</div>
+    <div id="passwordTip"></div>
+
+    <div class="section">
+      <strong>Historial generado</strong>
+      <button class="warning-btn" style="float:right" onclick="clearPasswordHistory()">Limpiar</button>
+      <div style="clear:both"></div>
+      <div class="history" id="history"></div>
+    </div>
+
+    <button class="switch-btn" onclick="showCalculator()">Volver a calculadora</button>
+  </div>
 </div>
 
-<button class="switch-btn" onclick="showPassword()">Ir al generador de contraseñas</button>
-
-</div>
-
-
-<div id="passwordTool" class="password">
-
-<h2>Generador de Contraseñas</h2>
-
-<div id="password">Pulsa generar</div>
-
-<button onclick="generatePassword()">Generar</button>
-<button onclick="copyPassword()">Copiar</button>
-
-<div class="options">
-
-<p>Longitud: <span id="lengthValue">16</span></p>
-<input type="range" min="6" max="32" value="16" id="length">
-
-<label><input type="checkbox" id="upper" checked> Mayúsculas</label><br>
-<label><input type="checkbox" id="lower" checked> Minúsculas</label><br>
-<label><input type="checkbox" id="numbers" checked> Números</label><br>
-<label><input type="checkbox" id="symbols"> Símbolos</label>
-
-</div>
-
-<div class="strength">
-<div class="strength-bar" id="strengthBar"></div>
-</div>
-
-<div class="history" id="history"></div>
-
-<button class="switch-btn" onclick="showCalculator()">Volver a calculadora</button>
-
-</div>
-
-</div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
 
 <script>
-
 function toggleMode(){
-document.body.classList.toggle("light");
+  document.body.classList.toggle("light");
+  localStorage.setItem("smartcalc_theme", document.body.classList.contains("light") ? "light" : "dark");
 }
 
-let display=document.getElementById("calcDisplay");
+const display=document.getElementById("calcDisplay");
+let calcMemory=0;
+let lastCalcAnswer=0;
 
 function press(val){
-display.value+=val;
+  if(display.value==="Error") display.value="";
+  display.value+=val;
+}
+
+function clearCalc(){ display.value=""; }
+function deleteLast(){ display.value=display.value.slice(0,-1); }
+
+function insertConstant(type){
+  const value=type === "PI" ? Math.PI : Math.E;
+  display.value += formatResult(value);
+}
+
+function insertLastAnswer(){
+  display.value += formatResult(lastCalcAnswer);
+}
+
+function applySquareRoot(){
+  const n=getDisplayNumber();
+  if(n===null) return showToast("Introduce primero un número");
+  if(n<0) return showToast("No existe raíz real de un número negativo");
+  display.value=formatResult(Math.sqrt(n));
+}
+
+function applyPower2(){
+  const n=getDisplayNumber();
+  if(n===null) return showToast("Introduce primero un número");
+  display.value=formatResult(n**2);
+}
+
+function applyReciprocal(){
+  const n=getDisplayNumber();
+  if(n===null) return showToast("Introduce primero un número");
+  if(n===0) return showToast("No se puede dividir entre cero");
+  display.value=formatResult(1/n);
+}
+
+function toggleSign(){
+  const n=getDisplayNumber();
+  if(n===null) return showToast("Introduce primero un número");
+  display.value=formatResult(-n);
+}
+
+function tokenize(expression){
+  const tokens=[];
+  let num="";
+  for(let i=0;i<expression.length;i++){
+    const c=expression[i];
+    if(/[0-9.]/.test(c)){
+      num+=c;
+      continue;
+    }
+    if(num){
+      if((num.match(/\./g)||[]).length>1) throw new Error("Número inválido");
+      tokens.push(num);
+      num="";
+    }
+    if(/[+\-*/()%^]/.test(c)) tokens.push(c);
+    else if(c.trim()!=="") throw new Error("Carácter no permitido");
+  }
+  if(num){
+    if((num.match(/\./g)||[]).length>1) throw new Error("Número inválido");
+    tokens.push(num);
+  }
+  return tokens;
+}
+
+function toRPN(tokens){
+  const output=[];
+  const stack=[];
+  const precedence={'+':1,'-':1,'*':2,'/':2,'%':2,'^':3};
+
+  for(let i=0;i<tokens.length;i++){
+    const t=tokens[i];
+    const prev=tokens[i-1];
+
+    if(!Number.isNaN(Number(t))){
+      output.push(t);
+    }else if(t==='('){
+      stack.push(t);
+    }else if(t===')'){
+      while(stack.length && stack[stack.length-1] !== '(') output.push(stack.pop());
+      if(stack.pop()!=='(') throw new Error("Paréntesis sin cerrar");
+    }else if(precedence[t]){
+      if(t==='-' && (i===0 || (prev && (precedence[prev] || prev==='(')))) output.push('0');
+      while(stack.length && precedence[stack[stack.length-1]]>=precedence[t] && !(t==='^' && stack[stack.length-1]==='^')) output.push(stack.pop());
+      stack.push(t);
+    }else{
+      throw new Error("Token inválido");
+    }
+  }
+
+  while(stack.length){
+    const op=stack.pop();
+    if(op==='(') throw new Error("Paréntesis sin cerrar");
+    output.push(op);
+  }
+
+  return output;
+}
+
+function evalRPN(rpn){
+  const stack=[];
+  for(const t of rpn){
+    if(!Number.isNaN(Number(t))){
+      stack.push(Number(t));
+      continue;
+    }
+    const b=stack.pop();
+    const a=stack.pop();
+    if(a===undefined || b===undefined) throw new Error("Expresión inválida");
+
+    if(t==='+') stack.push(a+b);
+    else if(t==='-') stack.push(a-b);
+    else if(t==='*') stack.push(a*b);
+    else if(t==='/'){
+      if(b===0) throw new Error("División por cero");
+      stack.push(a/b);
+    }else if(t==='%'){
+      if(b===0) throw new Error("Módulo por cero");
+      stack.push(a%b);
+    }else if(t==='^'){
+      stack.push(a**b);
+    }
+  }
+
+  if(stack.length!==1 || !Number.isFinite(stack[0])) throw new Error("Expresión inválida");
+  return stack[0];
+}
+
+function formatResult(n){
+  if(Number.isInteger(n)) return String(n);
+  return String(Number(n.toFixed(10)));
 }
 
 function calculate(){
-try{
-display.value=eval(display.value);
-}catch{
-display.value="Error";
-}
+  const expression=display.value;
+  if(!expression) return;
+
+  try{
+    const result=evalRPN(toRPN(tokenize(expression)));
+    const formatted=formatResult(result);
+    display.value=formatted;
+    lastCalcAnswer=result;
+    updateLastAnswerLabel();
+    addCalcHistory(`${expression} = ${formatted}`);
+  }catch(error){
+    display.value="Error";
+    showToast(error.message || "No se pudo calcular");
+  }
 }
 
-function clearCalc(){
-display.value="";
+function addCalcHistory(entry){
+  const history=document.getElementById("calcHistory");
+  const placeholder=history.querySelector(".placeholder");
+  if(placeholder) placeholder.remove();
+  const item=document.createElement("div");
+  item.innerText=entry;
+  history.prepend(item);
+  while(history.children.length>15) history.removeChild(history.lastChild);
+}
+
+function clearCalcHistory(){
+  document.getElementById("calcHistory").innerHTML='<div class="placeholder">Sin operaciones todavía</div>';
+}
+
+function getDisplayNumber(){
+  const value=Number(display.value);
+  return Number.isFinite(value) ? value : null;
+}
+
+function memoryAdd(){
+  const n=getDisplayNumber();
+  if(n===null) return showToast("Resultado inválido para memoria");
+  calcMemory+=n;
+  updateMemoryLabel();
+}
+
+function memorySubtract(){
+  const n=getDisplayNumber();
+  if(n===null) return showToast("Resultado inválido para memoria");
+  calcMemory-=n;
+  updateMemoryLabel();
+}
+
+function memoryRecall(){
+  display.value=formatResult(calcMemory);
+}
+
+function memoryClear(){
+  calcMemory=0;
+  updateMemoryLabel();
+}
+
+function updateMemoryLabel(){
+  document.getElementById("memoryValue").innerText=formatResult(calcMemory);
+}
+
+function updateLastAnswerLabel(){
+  document.getElementById("lastAnswer").innerText=formatResult(lastCalcAnswer);
 }
 
 function showPassword(){
-document.getElementById("calculatorTool").style.display="none";
-document.getElementById("passwordTool").style.display="block";
+  document.getElementById("calculatorTool").style.display="none";
+  const passwordTool=document.getElementById("passwordTool");
+  passwordTool.style.display="block";
+  passwordTool.classList.remove("tool");
+  void passwordTool.offsetWidth;
+  passwordTool.classList.add("tool");
 }
 
 function showCalculator(){
-document.getElementById("passwordTool").style.display="none";
-document.getElementById("calculatorTool").style.display="block";
+  document.getElementById("passwordTool").style.display="none";
+  const calculatorTool=document.getElementById("calculatorTool");
+  calculatorTool.style.display="block";
+  calculatorTool.classList.remove("tool");
+  void calculatorTool.offsetWidth;
+  calculatorTool.classList.add("tool");
 }
 
 const upper="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 const lower="abcdefghijklmnopqrstuvwxyz";
 const numbers="0123456789";
 const symbols="!@#$%^&*()_+[]{}<>?";
+const ambiguous=/[O0l1I]/g;
 
 const slider=document.getElementById("length");
 const lengthValue=document.getElementById("lengthValue");
+slider.oninput=()=>{
+  lengthValue.innerText=slider.value;
+  savePasswordPrefs();
+};
 
-slider.oninput=()=>lengthValue.innerText=slider.value;
+["upper","lower","numbers","symbols","excludeSimilar"].forEach(id=>{
+  document.getElementById(id).addEventListener("change", savePasswordPrefs);
+});
+
+function secureRandomInt(max){
+  if(max<=0) throw new Error("Máximo inválido");
+  const maxUint=0xffffffff;
+  const limit=maxUint - (maxUint % max);
+  const array=new Uint32Array(1);
+  do{ crypto.getRandomValues(array); }while(array[0]>=limit);
+  return array[0] % max;
+}
+
+function randomChar(set){ return set.charAt(secureRandomInt(set.length)); }
+
+function shuffleSecure(chars){
+  for(let i=chars.length-1;i>0;i--){
+    const j=secureRandomInt(i+1);
+    [chars[i],chars[j]]=[chars[j],chars[i]];
+  }
+  return chars;
+}
+
+function selectedSets(){
+  const excludeSimilar=document.getElementById("excludeSimilar").checked;
+  const sets=[];
+
+  const maybePush=(enabled, charset)=>{
+    if(!enabled) return;
+    const clean=excludeSimilar ? charset.replace(ambiguous,"") : charset;
+    if(clean.length) sets.push(clean);
+  };
+
+  maybePush(document.getElementById("upper").checked, upper);
+  maybePush(document.getElementById("lower").checked, lower);
+  maybePush(document.getElementById("numbers").checked, numbers);
+  maybePush(document.getElementById("symbols").checked, symbols);
+
+  return sets;
+}
 
 function generatePassword(){
+  const sets=selectedSets();
+  if(!sets.length){
+    showToast("Selecciona al menos una opción");
+    return;
+  }
 
-let chars="";
+  const length=Number(slider.value);
+  if(length<sets.length){
+    showToast("Aumenta la longitud para cubrir todas las opciones elegidas");
+    return;
+  }
 
-if(document.getElementById("upper").checked) chars+=upper;
-if(document.getElementById("lower").checked) chars+=lower;
-if(document.getElementById("numbers").checked) chars+=numbers;
-if(document.getElementById("symbols").checked) chars+=symbols;
+  const chars=[];
+  for(const set of sets) chars.push(randomChar(set));
 
-if(chars===""){
-alert("Selecciona al menos una opción");
-return;
-}
+  const allChars=sets.join("");
+  while(chars.length<length) chars.push(randomChar(allChars));
 
-let length=slider.value;
-let password="";
+  const password=shuffleSecure(chars).join("");
+  document.getElementById("password").innerText=password;
 
-for(let i=0;i<length;i++){
-password+=chars.charAt(Math.floor(Math.random()*chars.length));
-}
-
-document.getElementById("password").innerText=password;
-
-checkStrength(password);
-addHistory(password);
-
+  checkStrength(password);
+  addHistory(password);
 }
 
 function copyPassword(){
+  const text=document.getElementById("password").innerText;
+  if(!text || text==="Pulsa generar") return showToast("Primero genera una contraseña");
 
-let text=document.getElementById("password").innerText;
-
-navigator.clipboard.writeText(text).then(()=>{
-alert("Contraseña copiada");
-});
-
+  navigator.clipboard.writeText(text)
+    .then(()=>showToast("Contraseña copiada"))
+    .catch(()=>showToast("No se pudo copiar automáticamente"));
 }
 
 function checkStrength(pass){
+  let score=0;
+  const tips=[];
 
-let score=0;
+  if(pass.length>=12) score++; else tips.push("Usa 12+ caracteres");
+  if(pass.length>=20) score++;
+  if(/[A-Z]/.test(pass)) score++; else tips.push("Incluye mayúsculas");
+  if(/[a-z]/.test(pass)) score++; else tips.push("Incluye minúsculas");
+  if(/[0-9]/.test(pass)) score++; else tips.push("Incluye números");
+  if(/[^A-Za-z0-9]/.test(pass)) score++; else tips.push("Incluye símbolos");
+  if(/(.)\1{2,}/.test(pass)) { score=Math.max(0,score-1); tips.push("Evita repeticiones consecutivas"); }
 
-if(pass.length>8) score++;
-if(/[A-Z]/.test(pass)) score++;
-if(/[0-9]/.test(pass)) score++;
-if(/[^A-Za-z0-9]/.test(pass)) score++;
+  const maxScore=6;
+  const percent=(score/maxScore)*100;
 
-let bar=document.getElementById("strengthBar");
+  const bar=document.getElementById("strengthBar");
+  const text=document.getElementById("strengthText");
+  const tip=document.getElementById("passwordTip");
 
-bar.style.width=(score/4*100)+"%";
+  bar.style.width=`${percent}%`;
 
-if(score<=1) bar.style.background="red";
-else if(score==2) bar.style.background="orange";
-else if(score==3) bar.style.background="yellow";
-else bar.style.background="green";
+  if(score<=2){
+    bar.style.background="red";
+    text.innerText="Fortaleza: Débil";
+  }else if(score<=4){
+    bar.style.background="orange";
+    text.innerText="Fortaleza: Media";
+  }else if(score===5){
+    bar.style.background="#84cc16";
+    text.innerText="Fortaleza: Fuerte";
+  }else{
+    bar.style.background="green";
+    text.innerText="Fortaleza: Muy fuerte";
+  }
 
+  tip.innerText=tips.length ? `Sugerencia: ${tips[0]}` : "Excelente combinación de seguridad";
 }
 
 function addHistory(pass){
-
-let history=document.getElementById("history");
-
-let item=document.createElement("div");
-
-item.innerText=pass;
-
-history.prepend(item);
-
+  const history=document.getElementById("history");
+  const placeholder=history.querySelector(".placeholder");
+  if(placeholder) placeholder.remove();
+  const item=document.createElement("div");
+  item.innerText=pass;
+  history.prepend(item);
+  while(history.children.length>20) history.removeChild(history.lastChild);
 }
 
+function clearPasswordHistory(){
+  document.getElementById("history").innerHTML='<div class="placeholder">Sin contraseñas generadas</div>';
+}
+
+function showToast(message){
+  const toast=document.getElementById("toast");
+  toast.textContent=message;
+  toast.classList.add("show");
+  clearTimeout(showToast.timer);
+  showToast.timer=setTimeout(()=>toast.classList.remove("show"), 2200);
+}
+
+function savePasswordPrefs(){
+  const prefs={
+    length:Number(slider.value),
+    upper:document.getElementById("upper").checked,
+    lower:document.getElementById("lower").checked,
+    numbers:document.getElementById("numbers").checked,
+    symbols:document.getElementById("symbols").checked,
+    excludeSimilar:document.getElementById("excludeSimilar").checked,
+  };
+  localStorage.setItem("smartcalc_pwd_prefs", JSON.stringify(prefs));
+}
+
+function loadPrefs(){
+  const theme=localStorage.getItem("smartcalc_theme");
+  if(theme==="light") document.body.classList.add("light");
+
+  try{
+    const prefs=JSON.parse(localStorage.getItem("smartcalc_pwd_prefs") || "{}");
+    if(prefs.length) slider.value=Math.min(64,Math.max(6,prefs.length));
+    ["upper","lower","numbers","symbols","excludeSimilar"].forEach(id=>{
+      if(typeof prefs[id]==="boolean") document.getElementById(id).checked=prefs[id];
+    });
+  }catch{}
+
+  lengthValue.innerText=slider.value;
+  updateMemoryLabel();
+  updateLastAnswerLabel();
+  clearCalcHistory();
+  clearPasswordHistory();
+}
+
+document.addEventListener("keydown", (event)=>{
+  const key=event.key;
+  const inPasswordView=document.getElementById("passwordTool").style.display==="block";
+  if(inPasswordView) return;
+
+  if(event.ctrlKey && key.toLowerCase()==='l'){
+    event.preventDefault();
+    clearCalc();
+    return;
+  }
+
+  if(/[0-9]/.test(key) || ["+","-","*","/","%",".","(",")","^"].includes(key)){
+    press(key);
+  }else if(key==="Enter"){
+    event.preventDefault();
+    calculate();
+  }else if(key==="Backspace"){
+    deleteLast();
+  }else if(key==="Escape" || key==="Delete"){
+    clearCalc();
+  }else if(key.toLowerCase()==='s'){
+    applySquareRoot();
+  }else if(key.toLowerCase()==='q'){
+    applyPower2();
+  }else if(key.toLowerCase()==='i'){
+    applyReciprocal();
+  }else if(key.toLowerCase()==='n'){
+    toggleSign();
+  }else if(key.toLowerCase()==='p'){
+    insertConstant('PI');
+  }else if(key.toLowerCase()==='e'){
+    insertConstant('E');
+  }else if(key.toLowerCase()==='a'){
+    insertLastAnswer();
+  }
+});
+
+loadPrefs();
 </script>
 
 </body>
