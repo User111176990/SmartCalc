@@ -1,455 +1,125 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Herramientas Online</title>
-
-<style>
-
-body{
-font-family:Arial;
-margin:0;
-background:#0f172a;
-color:white;
-display:flex;
-justify-content:center;
-align-items:center;
-min-height:100vh;
-transition:0.3s;
-}
-
-.container{
-background:#1e293b;
-padding:25px;
-border-radius:15px;
-width:380px;
-box-shadow:0 0 20px rgba(0,0,0,0.4);
-transition:0.3s;
-}
-
-h2{
-margin-top:0;
-text-align:center;
-}
-
-button{
-padding:10px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-margin:5px;
-background:#ef4444;
-color:white;
-font-weight:bold;
-}
-
-button:hover{
-opacity:0.85;
-}
-
-.mode-btn{
-width:100%;
-background:#3b82f6;
-}
-
-.calc-display{
-width:100%;
-height:50px;
-font-size:20px;
-margin-bottom:10px;
-border-radius:8px;
-border:none;
-padding:10px;
-}
-
-.calc-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:8px;
-}
-
-.calc-grid button{
-padding:15px;
-font-size:16px;
-background:#334155;
-}
-
-.password{
-display:none;
-}
-
-#password{
-background:#020617;
-padding:12px;
-border-radius:8px;
-margin:10px 0;
-word-break:break-all;
-}
-
-.options{
-font-size:14px;
-}
-
-.history{
-margin-top:10px;
-max-height:80px;
-overflow:auto;
-font-size:12px;
-background:#020617;
-padding:8px;
-border-radius:8px;
-}
-
-.strength{
-height:8px;
-background:#111;
-border-radius:4px;
-margin-top:8px;
-overflow:hidden;
-}
-
-.strength-bar{
-height:100%;
-width:0%;
-background:red;
-transition:0.3s;
-}
-
-input[type="range"]{
-width:100%;
-}
-
-.switch-btn{
-margin-top:15px;
-width:100%;
-background:#22c55e;
-}
-
-
-/* MODO CLARO */
-
-.light{
-background:#f1f5f9;
-color:black;
-}
-
-.light .container{
-background:white;
-}
-
-.light #password{
-background:#e2e8f0;
-}
-
-.light .history{
-background:#e2e8f0;
-}
-
-.light .calc-grid button{
-background:#d1d5db;
-color:black;
-}
-
-</style>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SmartCalc Pro</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
-
-<div class="container">
-
-<button class="mode-btn" onclick="toggleMode()">Modo claro / oscuro</button>
-
-<div id="calculatorTool">
-
-<h2>Calculadora</h2>
-
-<input class="calc-display" id="calcDisplay" disabled>
-
-<div class="calc-grid">
-
-<button onclick="press('7')">7</button>
-<button onclick="press('8')">8</button>
-<button onclick="press('9')">9</button>
-<button onclick="press('/')">÷</button>
-
-<button onclick="press('4')">4</button>
-<button onclick="press('5')">5</button>
-<button onclick="press('6')">6</button>
-<button onclick="press('*')">×</button>
-
-<button onclick="press('1')">1</button>
-<button onclick="press('2')">2</button>
-<button onclick="press('3')">3</button>
-<button onclick="press('-')">−</button>
-
-<button onclick="press('0')">0</button>
-<button onclick="press('.')">.</button>
-<button onclick="calculate()">=</button>
-<button onclick="press('+')">+</button>
-
-<button onclick="press('%')">%</button>
-<button onclick="press('(')">(</button>
-<button onclick="press(')')">)</button>
-<button onclick="clearCalc()">C</button>
-
-</div>
-
-<button class="switch-btn" onclick="showPassword()">Ir al generador de contraseñas</button>
-
-</div>
-
-
-<div id="passwordTool" class="password">
-
-<h2>Generador de Contraseñas</h2>
-
-<div id="password">Pulsa generar</div>
-
-<button onclick="generatePassword()">Generar</button>
-<button onclick="copyPassword()">Copiar</button>
-
-<div class="options">
-
-<p>Longitud: <span id="lengthValue">16</span></p>
-<input type="range" min="6" max="32" value="16" id="length">
-
-<label><input type="checkbox" id="upper" checked> Mayúsculas</label><br>
-<label><input type="checkbox" id="lower" checked> Minúsculas</label><br>
-<label><input type="checkbox" id="numbers" checked> Números</label><br>
-<label><input type="checkbox" id="symbols"> Símbolos</label>
-
-</div>
-
-<div class="strength">
-<div class="strength-bar" id="strengthBar"></div>
-</div>
-
-<div class="history" id="history"></div>
-
-<button class="switch-btn" onclick="showCalculator()">Volver a calculadora</button>
-
-  <button class="mode-btn" onclick="toggleMode()">Modo claro / oscuro</button>
-
-  <div id="calculatorTool" class="tool">
-    <h2>Calculadora</h2>
-    <input class="calc-display" id="calcDisplay" disabled aria-label="Pantalla de calculadora">
-
-    <div class="calc-scientific">
-      <button onclick="applySquareRoot()">√x</button>
-      <button onclick="applyPower2()">x²</button>
-      <button onclick="applyReciprocal()">1/x</button>
-      <button onclick="toggleSign()">±</button>
-    </div>
-
-    <div class="calc-grid">
-      <button onclick="press('7')">7</button>
-      <button onclick="press('8')">8</button>
-      <button onclick="press('9')">9</button>
-      <button onclick="press('/')">÷</button>
-
-      <button onclick="press('4')">4</button>
-      <button onclick="press('5')">5</button>
-      <button onclick="press('6')">6</button>
-      <button onclick="press('*')">×</button>
-
-      <button onclick="press('1')">1</button>
-      <button onclick="press('2')">2</button>
-      <button onclick="press('3')">3</button>
-      <button onclick="press('-')">−</button>
-
-      <button onclick="press('0')">0</button>
-      <button onclick="press('.')">.</button>
-      <button onclick="calculate()">=</button>
-      <button onclick="press('+')">+</button>
-
-      <button onclick="press('%')">%</button>
-      <button onclick="press('(')">(</button>
-      <button onclick="press(')')">)</button>
-      <button onclick="clearCalc()">C</button>
-    </div>
-
-    <div class="calc-memory">
-      <button class="subtle-btn" onclick="insertConstant('PI')">π</button>
-      <button class="subtle-btn" onclick="insertConstant('E')">e</button>
-      <button class="subtle-btn" onclick="insertLastAnswer()">Ans</button>
-      <button class="subtle-btn" onclick="deleteLast()">DEL</button>
-      <button class="subtle-btn" onclick="memoryAdd()">M+</button>
-      <button class="subtle-btn" onclick="memorySubtract()">M-</button>
-      <button class="subtle-btn" onclick="memoryRecall()">MR</button>
-      <button class="subtle-btn" onclick="memoryClear()">MC</button>
-    </div>
-
-    <div class="section">
-      <strong>Memoria:</strong> <span id="memoryValue">0</span> · <strong>Último resultado:</strong> <span id="lastAnswer">0</span>
-    </div>
-
-    <div class="section">
-      <strong>Historial de operaciones</strong>
-      <button class="warning-btn" style="float:right" onclick="clearCalcHistory()">Limpiar</button>
-      <div style="clear:both"></div>
-      <div class="history" id="calcHistory"></div>
-      <div id="shortcutHint">
-        Atajos: Enter (=), Backspace (DEL), Esc/Ctrl+L (limpiar), s (√), q (x²), i (1/x), n (±), p (π), e (e), a (Ans).
+  <main class="app-shell">
+    <header class="app-header">
+      <div>
+        <h1>SmartCalc Pro</h1>
+        <p>Calculadora científica, contraseñas seguras y herramientas de tiempo.</p>
       </div>
-    </div>
+      <button class="mode-btn" onclick="toggleMode()">🌗 Claro / oscuro</button>
+    </header>
 
-    <button class="switch-btn" onclick="showPassword()">Ir al generador de contraseñas</button>
-  </div>
+    <nav class="tab-bar">
+      <button id="tabCalc" class="tab-btn active" onclick="showTool('calculatorTool')">🧮 Calculadora</button>
+      <button id="tabPass" class="tab-btn" onclick="showTool('passwordTool')">🔐 Contraseñas</button>
+      <button id="tabTime" class="tab-btn" onclick="showTool('timeTool')">⏱️ Cronómetro y temporizador</button>
+    </nav>
 
-  <div id="passwordTool" class="password tool">
-    <h2>Generador de Contraseñas</h2>
-    <div id="password">Pulsa generar</div>
+    <section id="calculatorTool" class="tool active">
+      <h2>Calculadora científica avanzada</h2>
+      <input class="calc-display" id="calcDisplay" disabled aria-label="Pantalla de calculadora">
 
-    <button onclick="generatePassword()">Generar</button>
-    <button onclick="copyPassword()">Copiar</button>
+      <div class="calc-functions">
+        <button onclick="press('sin(')">sin</button><button onclick="press('cos(')">cos</button><button onclick="press('tan(')">tan</button><button onclick="press('sqrt(')">√</button>
+        <button onclick="press('asin(')">asin</button><button onclick="press('acos(')">acos</button><button onclick="press('atan(')">atan</button><button onclick="press('cbrt(')">∛</button>
+        <button onclick="press('log(')">log</button><button onclick="press('ln(')">ln</button><button onclick="press('exp(')">exp</button><button onclick="press('fact(')">x!</button>
+        <button onclick="press('abs(')">abs</button><button onclick="press('floor(')">floor</button><button onclick="press('ceil(')">ceil</button><button onclick="press('round(')">round</button>
+      </div>
 
-    <div class="options">
-      <p>Longitud: <span id="lengthValue">16</span></p>
-      <input type="range" min="6" max="64" value="16" id="length">
+      <div class="calc-grid">
+        <button onclick="press('7')">7</button><button onclick="press('8')">8</button><button onclick="press('9')">9</button><button onclick="press('/')">÷</button><button onclick="deleteLast()">DEL</button>
+        <button onclick="press('4')">4</button><button onclick="press('5')">5</button><button onclick="press('6')">6</button><button onclick="press('*')">×</button><button onclick="clearCalc()">C</button>
+        <button onclick="press('1')">1</button><button onclick="press('2')">2</button><button onclick="press('3')">3</button><button onclick="press('-')">−</button><button onclick="press('^')">xʸ</button>
+        <button onclick="press('0')">0</button><button onclick="press('.')">.</button><button onclick="press('(')">(</button><button onclick="press(')')">)</button><button onclick="press('+')">+</button>
+        <button onclick="insertConstant('PI')">π</button><button onclick="insertConstant('E')">e</button><button onclick="insertLastAnswer()">Ans</button><button onclick="press('%')">mod</button><button class="equal" onclick="calculate()">=</button>
+      </div>
 
-      <label><input type="checkbox" id="upper" checked> Mayúsculas</label><br>
-      <label><input type="checkbox" id="lower" checked> Minúsculas</label><br>
-      <label><input type="checkbox" id="numbers" checked> Números</label><br>
-      <label><input type="checkbox" id="symbols"> Símbolos</label><br>
-      <label><input type="checkbox" id="excludeSimilar"> Excluir caracteres ambiguos (O,0,l,1,I)</label>
-    </div>
+      <div class="status-row">
+        <span><strong>Memoria:</strong> <span id="memoryValue">0</span></span>
+        <span><strong>Último resultado:</strong> <span id="lastAnswer">0</span></span>
+      </div>
+      <div class="memory-row">
+        <button class="subtle-btn" onclick="memoryAdd()">M+</button>
+        <button class="subtle-btn" onclick="memorySubtract()">M-</button>
+        <button class="subtle-btn" onclick="memoryRecall()">MR</button>
+        <button class="subtle-btn" onclick="memoryClear()">MC</button>
+      </div>
 
-    <div class="strength"><div class="strength-bar" id="strengthBar"></div></div>
-    <div id="strengthText">Fortaleza: -</div>
-    <div id="passwordTip"></div>
+      <div class="section">
+        <strong>Historial de operaciones</strong>
+        <button class="warning-btn" onclick="clearCalcHistory()">Limpiar</button>
+        <div class="history" id="calcHistory"></div>
+      </div>
+    </section>
 
-    <div class="section">
-      <strong>Historial generado</strong>
-      <button class="warning-btn" style="float:right" onclick="clearPasswordHistory()">Limpiar</button>
-      <div style="clear:both"></div>
-      <div class="history" id="history"></div>
-    </div>
+    <section id="passwordTool" class="tool">
+      <h2>Generador de contraseñas premium</h2>
+      <div id="password">Pulsa generar</div>
+      <div class="action-row">
+        <button onclick="generatePassword()">Generar</button>
+        <button onclick="copyPassword()">Copiar</button>
+      </div>
 
-    <button class="switch-btn" onclick="showCalculator()">Volver a calculadora</button>
-  </div>
-</div>
+      <div class="options">
+        <p>Longitud: <span id="lengthValue">16</span></p>
+        <input type="range" min="6" max="64" value="16" id="length">
+        <label><input type="checkbox" id="upper" checked> Mayúsculas</label>
+        <label><input type="checkbox" id="lower" checked> Minúsculas</label>
+        <label><input type="checkbox" id="numbers" checked> Números</label>
+        <label><input type="checkbox" id="symbols" checked> Símbolos</label>
+        <label><input type="checkbox" id="excludeSimilar"> Excluir ambiguos (O,0,l,1,I)</label>
+      </div>
 
-</div>
+      <div class="strength"><div class="strength-bar" id="strengthBar"></div></div>
+      <div id="strengthText">Fortaleza: -</div>
+      <p id="passwordTip"></p>
 
-<script>
+      <div class="section">
+        <strong>Historial generado</strong>
+        <button class="warning-btn" onclick="clearPasswordHistory()">Limpiar</button>
+        <div class="history" id="history"></div>
+      </div>
+    </section>
 
-function toggleMode(){
-document.body.classList.toggle("light");
-}
+    <section id="timeTool" class="tool">
+      <h2>Cronómetro y temporizador</h2>
 
-let display=document.getElementById("calcDisplay");
+      <div class="time-card">
+        <h3>Cronómetro</h3>
+        <div id="stopwatchDisplay" class="time-display">00:00:00.00</div>
+        <div class="action-row">
+          <button onclick="startStopwatch()">Iniciar</button>
+          <button onclick="pauseStopwatch()">Pausar</button>
+          <button onclick="resetStopwatch()">Reiniciar</button>
+          <button onclick="lapStopwatch()">Vuelta</button>
+        </div>
+        <div id="lapList" class="history"></div>
+      </div>
 
-function press(val){
-display.value+=val;
-}
+      <div class="time-card">
+        <h3>Temporizador</h3>
+        <div class="timer-inputs">
+          <input id="timerMinutes" type="number" min="0" max="180" value="5"> min
+          <input id="timerSeconds" type="number" min="0" max="59" value="0"> seg
+        </div>
+        <div id="timerDisplay" class="time-display">05:00</div>
+        <div class="action-row">
+          <button onclick="startTimer()">Iniciar</button>
+          <button onclick="pauseTimer()">Pausar</button>
+          <button onclick="resetTimer()">Reiniciar</button>
+        </div>
+      </div>
+    </section>
+  </main>
 
-function calculate(){
-try{
-display.value=eval(display.value);
-}catch{
-display.value="Error";
-}
-}
-
-function clearCalc(){
-display.value="";
-}
-
-function showPassword(){
-document.getElementById("calculatorTool").style.display="none";
-document.getElementById("passwordTool").style.display="block";
-}
-
-function showCalculator(){
-document.getElementById("passwordTool").style.display="none";
-document.getElementById("calculatorTool").style.display="block";
-}
-
-const upper="ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-const lower="abcdefghijklmnopqrstuvwxyz";
-const numbers="0123456789";
-const symbols="!@#$%^&*()_+[]{}<>?";
-
-const slider=document.getElementById("length");
-const lengthValue=document.getElementById("lengthValue");
-
-slider.oninput=()=>lengthValue.innerText=slider.value;
-
-function generatePassword(){
-
-let chars="";
-
-if(document.getElementById("upper").checked) chars+=upper;
-if(document.getElementById("lower").checked) chars+=lower;
-if(document.getElementById("numbers").checked) chars+=numbers;
-if(document.getElementById("symbols").checked) chars+=symbols;
-
-if(chars===""){
-alert("Selecciona al menos una opción");
-return;
-}
-
-let length=slider.value;
-let password="";
-
-for(let i=0;i<length;i++){
-password+=chars.charAt(Math.floor(Math.random()*chars.length));
-}
-
-document.getElementById("password").innerText=password;
-
-checkStrength(password);
-addHistory(password);
-
-}
-
-function copyPassword(){
-
-let text=document.getElementById("password").innerText;
-
-navigator.clipboard.writeText(text).then(()=>{
-alert("Contraseña copiada");
-});
-
-}
-
-function checkStrength(pass){
-
-let score=0;
-
-if(pass.length>8) score++;
-if(/[A-Z]/.test(pass)) score++;
-if(/[0-9]/.test(pass)) score++;
-if(/[^A-Za-z0-9]/.test(pass)) score++;
-
-let bar=document.getElementById("strengthBar");
-
-bar.style.width=(score/4*100)+"%";
-
-if(score<=1) bar.style.background="red";
-else if(score==2) bar.style.background="orange";
-else if(score==3) bar.style.background="yellow";
-else bar.style.background="green";
-
-}
-
-function addHistory(pass){
-
-let history=document.getElementById("history");
-
-let item=document.createElement("div");
-
-item.innerText=pass;
-
-history.prepend(item);
-
-}
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
-
-</script>
-<script src="app.js"></script>
-
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
 </body>
 </html>
